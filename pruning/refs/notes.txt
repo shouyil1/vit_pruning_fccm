@@ -1,0 +1,407 @@
+BertForSequenceClassification(
+  (bert): BertModel(
+
+
+    (embeddings): BertEmbeddings(
+      (word_embeddings): Embedding(30522, 768, padding_idx=0)
+      (position_embeddings): Embedding(512, 768)
+      (token_type_embeddings): Embedding(2, 768)
+      (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+      (dropout): Dropout(p=0.1, inplace=False)
+    )
+
+
+    ########## PATCHABLE ###############
+    (encoder): BertEncoder(
+      (layer): ModuleList(
+        (0-11): 12 x BertLayer(
+          (attention): BertAttention(
+            (self): BertSelfAttention(
+              (query): ####Linear####(in_features=768, out_features=768, bias=True)
+              (key): ####Linear####(in_features=768, out_features=768, bias=True)
+              (value): ####Linear####(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+            (output): BertSelfOutput(
+              (dense): ####Linear####(in_features=768, out_features=768, bias=True)
+              (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+              (dropout): Dropout(p=0.1, inplace=False)
+            )
+          )
+          (intermediate): BertIntermediate(
+            (dense): $$$$Linear$$$$(in_features=768, out_features=3072, bias=True)
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): BertOutput(
+            (dense): $$$$Linear$$$$(in_features=3072, out_features=768, bias=True)
+            (LayerNorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+        )
+      )
+    )
+
+    
+
+    (pooler): BertPooler(
+      (dense): Linear(in_features=768, out_features=768, bias=True)
+      (activation): Tanh()
+    )
+  )
+
+
+  (dropout): Dropout(p=0.1, inplace=False)
+  (classifier): Linear(in_features=768, out_features=2, bias=True)
+)
+
+
+
+
+
+
+
+
+
+DeiTForImageClassification(
+  (deit): DeiTModel(
+    
+    
+    (embeddings): DeiTEmbeddings(
+      (patch_embeddings): DeiTPatchEmbeddings(
+        (projection): Conv2d(3, 768, kernel_size=(16, 16), stride=(16, 16))
+      )
+      (dropout): Dropout(p=0.0, inplace=False)
+    )
+
+
+    ##### PATCHABLE ###########
+    (encoder): DeiTEncoder(
+      (layer): ModuleList(
+        (0-11): 12 x DeiTLayer(
+          (attention): DeiTAttention(
+            (attention): DeiTSelfAttention(
+              (query): ####Linear####(in_features=768, out_features=768, bias=True)
+              (key): ####Linear####(in_features=768, out_features=768, bias=True)
+              (value): ####Linear####(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+            (output): DeiTSelfOutput(
+              (dense): ####Linear####(in_features=768, out_features=768, bias=True)
+              (dropout): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (intermediate): DeiTIntermediate(
+            (dense): $$$$Linear$$$$(in_features=768, out_features=3072, bias=True)
+            (intermediate_act_fn): GELUActivation()
+          )
+          (output): DeiTOutput(
+            (dense): $$$$Linear$$$$(in_features=3072, out_features=768, bias=True)
+            (dropout): Dropout(p=0.0, inplace=False)
+          )
+          (layernorm_before): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+          (layernorm_after): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+        )
+      )
+    )
+
+
+    (layernorm): LayerNorm((768,), eps=1e-12, elementwise_affine=True)
+  )
+
+
+
+  (classifier): Linear(in_features=768, out_features=1000, bias=True)
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DeiT Config Parameters (generic)
+-----------------------------------------------------
+
+"model_type": "deit",
+
+"image_size": 224,
+"patch_size": 16,
+"num_channels": 3,
+
+"num_hidden_layers": 12,         (total encoders)
+"num_attention_heads": 12,       (heads per encoder)
+
+"hidden_size": 768,
+"intermediate_size": 3072,
+
+"encoder_stride": 16,
+"hidden_act": "gelu",
+"qkv_bias": true,
+
+"attention_probs_dropout_prob": 0.0,
+"hidden_dropout_prob": 0.0,
+
+
+"initializer_range": 0.02,
+"layer_norm_eps": 1e-12,
+
+
+
+
+
+
+
+
+
+
+
+
+Sparse Training Arguments
+--------------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------------
+RELEVANT PARAMETERS
+----------------------------------------------------------------------------------------------------------
+
+mask_scores_learning_rate: float = field(
+  default=1e-2, metadata={"help": "The initial learning rate for mask_scores."}
+)
+
+dense_pruning_method: str = field(default="topK", metadata={"help": "Dense Layers pruning method."})
+
+attention_pruning_method: str = field(default="topK", metadata={"help": "Dense Layers pruning method."})
+
+attention_output_with_dense: bool = field(
+  default=True,
+  metadata={"help": "share the same pruning parameters for attention output and other dense matrices"},
+)
+
+bias_mask: bool = field(
+  default=True,
+  metadata={"help": "Apply the mask built on weight to the bias too (not doing so will impact somewhat ability to prune complete heads, as bias is then pruned while being nonzero)"},
+)
+
+mask_init: str = field(default="constant", metadata={"help": "Mask scores initialization method"})
+
+mask_scale: float = field(
+  default=0.0,
+  metadata={"help": "Parameter to use with mask_init."},
+)
+
+dense_block_rows: int = field(
+  default=1,
+  metadata={"help": "Block size in rows for dense layers."},
+)
+
+dense_block_cols: int = field(
+  default=1,
+  metadata={"help": "Block size in cols for dense layers."},
+)
+
+attention_block_rows: int = field(
+  default=1,
+  metadata={"help": "Block size in rows for attention."},
+)
+
+attention_block_cols: int = field(
+  default=1,
+  metadata={"help": "Block size in cols for attention."},
+)
+
+initial_threshold: float = field(
+  default=1.0,
+  metadata={"help": "Initial value of the threshold (for scheduling)."},
+)
+
+final_threshold: float = field(
+  default=0.5,
+  metadata={"help": "Final value of the threshold (for scheduling)."},
+)
+
+initial_warmup: float = field(
+  default=1,
+  metadata={
+      "help": "Run `initial_warmup` * `warmup_steps` steps of threshold warmup during which threshold stays at its `initial_threshold` value (sparsity schedule)."
+  },
+)
+
+final_warmup: float = field(
+  default=2,
+  metadata={
+      "help": "Run `final_warmup` * `warmup_steps` steps of threshold cool-down during which threshold stays"
+  },
+)
+
+regularization: str = field(
+  default="disabled",
+  metadata={"help": "Add L0 or L1 regularization to the mask scores."},
+)
+
+regularization_final_lambda: float = field(
+  default=0.0,
+  metadata={"help": "Regularization intensity (used in conjunction with `regularization`)."},
+)
+
+attention_lambda: float = field(
+  default=1.0,
+  metadata={"help": "Regularization intensity for attention (attention lambda will be regularization_lambda * attention_lambda)."},
+)
+
+dense_lambda: float = field(
+  default=1.0,
+  metadata={
+      "help": "Regularization intensity for dense (attention lambda will be regularization_lambda * dense_lambda)."},
+)
+
+distil_teacher_name_or_path: str = field(
+  default=None,
+  metadata={"help": "Path to the already SQuAD fine-tuned teacher model. Only for distillation."},
+)
+
+distil_alpha_ce: float = field(
+  default=0.5,
+  metadata={"help": "Cross entropy loss linear weight. Only for distillation."},
+)
+
+distil_alpha_teacher: float = field(
+  default=0.5,
+  metadata={"help": "Distillation loss linear weight. Only for distillation."},
+)
+
+distil_temperature: float = field(
+  default=2.0,
+  metadata={"help": "Distillation temperature. Only for distillation."},
+)
+
+final_finetune: bool = field(
+  default=False,
+  metadata={
+      "help": "Run a final fine tune pass on the network"
+  },
+)
+
+linear_min_parameters: int = field(
+  default=0.005,
+  metadata={
+      "help": "Minimum fraction of parameters which should be non zero when using ThresholdBinarizer"
+  },
+)
+
+eval_with_current_patch_params: bool = field(
+    default=False,
+    metadata={
+        "help": "Whether to keep the transition parameters used during training for eval. Only for Layer2NoNorm, GeLU2ReLU and pruning threshold."
+    },
+)
+
+
+------------------------------------------------------------------------------------------------------------------------------
+IRRELEVANT PARAMETERS
+------------------------------------------------------------------------------------------------------------------------------
+
+ampere_pruning_method: str = field(
+    default="disabled",
+    metadata={"help": "Ampere sparse method ('disabled' for no ampere sparsity, topK, annealing, sigmoied_threshold, threshold)"},
+)
+
+qat: bool = field(
+    default=False,
+    metadata={"help": "Whether to prepare the model for Quantization Aware Training"},
+)
+
+qconfig: str = field(
+    default="default",
+    metadata={"help": "The quantization scheme configuration to use for QAT"},
+)
+
+rewind_model_name_or_path: str = field(
+    default=None,
+    metadata={
+        "help": "Model that will be used as a guide to prevent pruning of some attention heads while redoing fine-pruning."
+    },
+)
+
+layer_norm_patch: bool = field(
+    default=False,
+    metadata={
+        "help": "Transform the LayerNorms in a MobileBert NoNorm"
+    },
+)
+
+layer_norm_patch_steps: int = field(
+    default=50000,
+    metadata={
+        "help": "Number of steps for the transition from LayerNorm to NoNorm"
+    },
+)
+
+layer_norm_patch_start_delta: int = field(
+    default=0.99,
+    metadata={
+        "help": "Starting smoothing factor for transition from LayerNorm to NoNorm (final is 1.0)."
+    },
+)
+
+gelu_patch: bool = field(
+    default=False,
+    metadata={
+        "help": "Transform the GeLU in ReLU"
+    },
+)
+
+gelu_patch_steps: int = field(
+    default=50000,
+    metadata={
+        "help": "Number of steps for the transition from GeLU to ReLU"
+    },
+)
+
+decoder_attention_lambda: float = field(
+    default=None,
+    metadata={"help": "Regularization intensity for decoder attention (attention lambda will be regularization_lambda * decoder_attention_lambda)."},
+)
+
+decoder_dense_lambda: float = field(
+    default=None,
+    metadata={
+        "help": "Regularization intensity for decoder dense (attention lambda will be regularization_lambda * decoder_dense_lambda)."},
+)
+
+initial_ampere_temperature: float = field(
+    default=0.0,
+    metadata={"help": "Initial value of the ampere temperature (for scheduling)."},
+)
+
+final_ampere_temperature: float = field(
+    default=20.0,
+    metadata={"help": "Final value of the ampere temperature (for scheduling)."},
+)
+
+
+####################################################################################
+####################################################################################
+
+Relevant Questions (Notes)
+
+- How are masks shared across Q, K, V, O?
+- Format of Q, K, V, O storage in terms of associated "HEADS" and how their "co-removal" occurs to ensure dimensional sanity
+
+- Token Pruning -> How to implement correctly? What exactly/precisely happens with fine-tuning with token dropping? Can it be improved upon?
+- Block Pruning -> Understand nn_pruning code better
+
+- Initiate Accelerator Design (DeiT, Swin-T, FastViT topologies should be supported)
+
+- Effective Density Comparison: Which base model to compare density against? Most likely should be a baseline DeiT used initially for fine-pruning
+
+- Examine: The heads that are fully pruned; if their proportion is so high why is the speed-up not at least somewhat dramatic?

@@ -1,0 +1,17 @@
+batch_size: 8
+block_size: 16
+context: baseline
+cpu:
+  latency_ms: 105.79666653648019
+  throughput_imgs_per_sec: 75.61674920297688
+epochs: 30
+fpga:
+  latency_ms: 25.55904
+  throughput_imgs_per_sec: 313.00080128205127
+giga_macs: 4.270055424
+gpu:
+  latency_ms: 4.078947380185127
+  throughput_imgs_per_sec: 1961.290316924096
+million_params: 21.974632
+retained_heads_ratio: 1.0
+test_accuracy: 0.7959

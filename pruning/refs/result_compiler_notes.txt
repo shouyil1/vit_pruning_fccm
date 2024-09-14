@@ -1,0 +1,5 @@
+To do:
+
+- Layer-wise latency measurement (how important is this?)
+- MACS (Compute MACS) for models via torchmetric 
+- Final result compiler script that supports latency compute (and throughput compute) for all situations

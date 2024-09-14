@@ -1,0 +1,19 @@
+batch_size: 8
+block_prune_density: 0.7
+block_size: 32
+context: simprune
+cpu:
+  latency_ms: 41.0496958065778
+  throughput_imgs_per_sec: 194.8857316189437
+epochs: 30
+fpga:
+  latency_ms: 17.00928
+  throughput_imgs_per_sec: 470.33148963389397
+giga_macs: 1.614938112
+gpu:
+  latency_ms: 6.305704731494188
+  throughput_imgs_per_sec: 1268.692452414329
+million_params: 17.53276
+retained_heads_ratio: 0.9722222222222222
+test_accuracy: 0.73458
+token_keep_rate: 0.5
